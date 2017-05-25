@@ -1,0 +1,11 @@
+<template>
+<div>ratings页面</div>
+</template>
+
+<script>
+
+</script>
+
+<style lang="stylus">
+
+</style>
