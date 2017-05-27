@@ -7,12 +7,15 @@ import Goods from 'components/goods/goods.vue'
 import Sellers from 'components/sellers/sellers.vue'
 import Ratings from 'components/ratings/ratings.vue'
 
+import 'common/stylus/index.styl'
+
 Vue.config.productionTip = false
 // 1.引用vue-router
 Vue.use(VueRouter)
 // 2.实例化vue-router
 // 3.配置路由、组件
 const router = new VueRouter({
+  linkActiveClass: 'active', /* 全局配置 <router-link> 的默认『激活 class 类名』 */
   routes: [
     {path: '/goods', component: Goods},
     {path: '/sellers', component: Sellers},
