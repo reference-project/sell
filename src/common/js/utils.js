@@ -3,6 +3,7 @@
  */
 import axios from 'axios'
 const CODE_OK = '000'
+
 export class xhr {
   static _axios ({method = 'GET', url = '', responseType = 'application/json', requestData} = {}) {
     return axios({method, url, responseType, requestData})
@@ -32,4 +33,17 @@ export class xhr {
   static delete (url, requestData) {
     return xhr._axios({method: 'delete', url, requestData})
   }
+
+  // 并发请求
+  static all (...reqs) {
+    let httpsArray = []
+    for (let req of reqs) {
+      httpsArray.push(xhr._axios({method: req.method, url: req.url, requestData: req.requestData}))
+    }
+    return axios.all(httpsArray)
+      .then(axios.spread((...datas) => {
+        return datas
+      }))
+  }
+
 }

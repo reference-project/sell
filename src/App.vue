@@ -15,7 +15,7 @@
     <!--路由出口-->
     <!--路由配置到的组件将渲染到这里-->
     <!--相当于content-->
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 
@@ -25,18 +25,36 @@
   export default {
     data () {
       return {
-        seller: {}
+        seller: {},
+        goods: {},
+        ratings: {}
       }
     },
     components: {
       elmHeader
     },
     created () {
-      console.log(xhr.prototype)
-      xhr.get('http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/sellers')
-        .then((data) => {
-          this.seller = data.seller
-        })
+//      xhr.get('http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/sellers')
+//        .then((data) => {
+//          this.seller = data.seller
+//        })
+//      xhr.get('http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/goods')
+//        .then((data) => {
+//          this.goods = data.goods
+//        })
+//      xhr.get('http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/ratings')
+//        .then((data) => {
+//          this.seratingsller = data.ratings
+//        })
+      xhr.all(
+        {method: 'get', url: 'http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/sellers'},
+        {method: 'get', url: 'http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/goods'},
+        {method: 'get', url: 'http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/ratings'}
+      ).then((datas) => {
+        this.seller = datas[0].seller
+        this.goods = datas[1].goods
+        this.ratings = datas[2].ratings
+      })
     }
   }
 </script>
@@ -50,6 +68,7 @@
       height 40px
       line-height 40px
       border-1px (rgba(7, 17, 27, 0.1))
+      background #fff
       .tab-item
         flex 1
         text-align center
