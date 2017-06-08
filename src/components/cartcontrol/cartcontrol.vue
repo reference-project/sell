@@ -1,9 +1,9 @@
 <template>
   <div class="cartcontrol">
     <div class="cart-decrease" @click="decreaseCount($event)">
-      <transition name="move">
-        <span v-show="food.count>0" class="icon-remove_circle_outline"></span>
-      </transition>
+        <transition name="bounce">
+          <span v-show="food.count>0" class="icon-remove_circle_outline"></span>
+        </transition>
     </div>
     <div v-show="food.count>0" class="cart-count">{{food.count}}</div>
     <div class="cart-increase icon-add_circle" @click="addCart($event)"></div>
@@ -40,16 +40,39 @@
 </script>
 
 <style lang="stylus">
+  .bounce-enter-active {
+    animation: bounce-in .5s;
+  }
+  .bounce-leave-active {
+    animation: bounce-out .5s linear;
+  }
+  @keyframes bounce-in {
+    0% {
+      opacity 0
+      transform: translate3d(50px,0,0) rotate(360deg) scale(0.5);
+    }
+    100% {
+      opacity 1
+      transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    }
+  }
+  @keyframes bounce-out {
+    0% {
+      opacity 1
+      transform: translate3d(0,0,0) rotate(0deg) scale(1);
+    }
+    100% {
+      opacity 0
+      transform: translate3d(50px,0,0) rotate(360deg) scale(0.5);
+    }
+  }
   .cartcontrol
     font-size 0
     .cart-decrease
       display inline-block
       padding 6px
-      .move-enter-active,.move-leave-active
-        transition: all .5s linear
-      .move-enter,.move-leave-active
-        opacity 0
       .icon-remove_circle_outline
+        display block
         font-size 24px
         line-height 24px
         color rgb(0, 160, 220)
