@@ -2,7 +2,8 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item, index) in goods" class="menu-item" :class="index===currentIndex?'current':''" @click="selectMenu(index,$event)">
+        <li v-for="(item, index) in goods" class="menu-item" :class="index===currentIndex?'current':''"
+            @click="selectMenu(index,$event)">
           <span class="text border-1px">
             <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>
             {{item.name}}
@@ -30,7 +31,7 @@
                                                                 v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" @addCart="parabola"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -38,7 +39,8 @@
         </li>
       </ul>
     </div>
-    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
+              :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -131,7 +133,14 @@
         }
         let foodList = this.$refs.foodWrapper.getElementsByClassName('food-list-hook')
         this.foodScroll.scrollToElement(foodList[index], 300)
+      },
+      parabola (target) {
+        // 体验优化，异步执行下落动画
+        this.$nextTick(() => {
+          this.$refs.shopcart._paralola(target)
+        })
       }
+
     }
   }
 </script>

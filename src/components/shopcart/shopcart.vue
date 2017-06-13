@@ -15,11 +15,50 @@
         <span class="pay">{{padDesc}}</span>
       </div>
     </div>
+    <div class="ball-container">
+      <transition-group
+        name="ball"
+        @before-enter="beforeEnter"
+        @enter="Enter"
+        @after-enter="afterEnter">
+        <div v-for="ball in balls" v-show="ball.show" class="ball" :key="ball.id">
+          <div class="inner"></div>
+        </div>
+      </transition-group>
+
+    </div>
   </div>
 </template>
 
 <script>
   export default {
+    data () {
+      return {
+        balls: [
+          {
+            id: 1,
+            show: false
+          },
+          {
+            id: 3,
+            show: false
+          },
+          {
+            id: 4,
+            show: false
+          },
+          {
+            id: 5,
+            show: false
+          },
+          {
+            id: 6,
+            show: false
+          }
+        ],
+        dropBalls: []
+      }
+    },
     props: {
       selectFoods: {
         type: Array,
@@ -65,6 +104,58 @@
         return this.totalPrice >= this.minPrice
           ? 'enough'
           : 'not-enough'
+      }
+    },
+    methods: {
+      _paralola (target) {
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i]
+          if (!ball.show) {
+            ball.show = true
+            ball.target = target
+            this.dropBalls.push(ball)
+            return
+          }
+        }
+      },
+      beforeEnter (el) {
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i]
+          if (ball.show) {
+            // 获取+号的当前坐标
+            let rect = ball.target.getBoundingClientRect()
+            let x = rect.left - 32
+            let y = -(window.innerHeight - rect.top - 22)
+            el.style.webkitTransform = `translate3d(0,${y}px,0)`
+            el.style.transform = `translate3d(0,${y}px,0)`
+            let inner = el.getElementsByClassName('inner')[0]
+            inner.style.webkitTransform = `translate3d(${x}px,0,0)`
+            inner.style.transform = `translate3d(${x}px,0,0)`
+          }
+        }
+      },
+      Enter (el, done) {
+        /* eslint-disable no-unused-vars */
+        let rf = el.offsetHeight
+        this.$nextTick(() => {
+          el.style.webkitTransform = 'translate3d(0,0,0)'
+          el.style.transform = 'translate3d(0,0,0)'
+          el.style.transition = 'all .5s cubic-bezier(0.49,-0.29,0.75,0.41)'
+          let inner = el.getElementsByClassName('inner')[0]
+          inner.style.webkitTransform = 'translate3d(0,0,0)'
+          inner.style.transform = 'translate3d(0,0,0)'
+          inner.style.transition = 'all .5s linear'
+          done()
+        })
+      },
+      afterEnter (el) {
+        setTimeout(() => {
+          let ball = this.dropBalls.shift()
+          if (ball.show) {
+            ball.show = false
+            el.style.display = 'none'
+          }
+        }, 480)
       }
     }
   }
@@ -158,4 +249,15 @@
         &.enough
           background #00b43c
           color #fff
+    .ball-container
+      .ball
+        position fixed
+        left 32px
+        bottom 22px
+        z-index 200
+        .inner
+          width 16px
+          height 16px
+          border-radius 50%
+          background red
 </style>
