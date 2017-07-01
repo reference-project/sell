@@ -30,5 +30,5 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
-router.push('/goods')
+// router.push('/goods')
 

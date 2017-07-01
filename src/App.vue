@@ -15,17 +15,24 @@
     <!--路由出口-->
     <!--路由配置到的组件将渲染到这里-->
     <!--相当于content-->
-    <router-view :seller="seller"></router-view>
+    <keep-alive>
+      <router-view :seller="seller" :ratings="ratings" :goods="goods" keep-alive></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
   import elmHeader from 'components/header/header.vue'
-  import { xhr } from 'common/js/utils'
+  import { xhr, urlParse } from 'common/js/utils'
   export default {
     data () {
       return {
-        seller: {},
+        seller: {
+          id: (() => {
+            let queryParam = urlParse()
+            return queryParam.id
+          })()
+        },
         goods: {},
         ratings: {}
       }
@@ -47,11 +54,11 @@
 //          this.seratingsller = data.ratings
 //        })
       xhr.all(
-        {method: 'get', url: 'http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/sellers'},
+        {method: 'get', url: 'http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/sellers?id=' + this.seller.id},
         {method: 'get', url: 'http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/goods'},
         {method: 'get', url: 'http://easy-mock.com/mock/59282da391470c0ac1fe53c7/elm/ratings'}
       ).then((datas) => {
-        this.seller = datas[0].seller
+        this.seller = Object.assign({}, datas[0].seller, {id: this.seller.id})
         this.goods = datas[1].goods
         this.ratings = datas[2].ratings
       })
@@ -72,7 +79,7 @@
       .tab-item
         flex 1
         text-align center
-        &>a
+        & > a
           display block
           font-size 14px
           color rgb(77, 85, 93)
